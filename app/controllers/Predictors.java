@@ -74,7 +74,9 @@ public class Predictors extends Transformers {
 		Predictor target = (Predictor) find(Kind.PREDICTOR, id);
 		checkReady(target);
 		target.delete();
-		renderText("Deleted predictor '%s'. Note that this may have broken an existing joined transformer.", id);
+		renderDeleted();
+		//Cannot send back a plain text response if using Backbone.destroy() in a JavaScript client (since any non-JSON response is treated as an error
+//		renderText("Deleted predictor '%s'. Note that this may have broken an existing joined transformer.", id);
 	}
 	
 	//--Start up jobs----------------------------------------------------------
