@@ -1,0 +1,13 @@
+#{extends 'main.html' /}
+
+<h1>${title}</h1>
+<p>
+	#{if resourceNames.size() == 0}
+	  No resources in collection.
+	#{/if}
+	#{else}
+	  <ul>
+	  #{doLayout /}
+	  </ul>
+	#{/else}
+</p>

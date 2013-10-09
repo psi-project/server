@@ -1,0 +1,23 @@
+
+html {
+    overflow-y: scroll;
+}
+
+html, body {
+    background: #F7F7F7;
+    font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5em !important;
+}
+
+html {
+    border-top: 5px solid #4F6228 /* #67A927 */;    
+}
+
+pre.javascript {
+	border: 1px solid silver;
+}
+
+pre.javascript code {
+	box-shadow: 4px 4px 3px #888888 inset;
+}

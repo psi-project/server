@@ -1,0 +1,4 @@
+{ 
+    "type":    "object",
+    "default": "%default"
+}

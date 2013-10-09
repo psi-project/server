@@ -1,0 +1,6 @@
+#{extends 'listAll.html' /}
+#{set title:'Protocols and Structures for Inference - All Relations' /}
+
+#{list items:resourceNames, as:'name' }
+	<li><a href="@{Data.describe(name)}" title="${name}">${name}</a></li>
+#{/list}

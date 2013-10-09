@@ -1,0 +1,25 @@
+#{extends 'main.html' /}
+#{set title:'Protocols and Structures for Inference - System Initialisation' /}
+
+<h1>${title}</h1>
+
+<p style="color: red">Running initialise again after first populating the database will add new model definitions if their files have been added to the appropriate directory.</p>
+
+<style type="text/css">
+	.first { border-top: 1px solid grey; }
+</style>
+
+<p>
+	<ul style="list-style: none; width: 30em;">
+		%{ String q = "?" + request.querystring; }%
+		<li class="first">Load <a href="@{Admin.initialiseRelations()}" title="initialise relations">relations and their attributes</a></li>
+		<li>Load <a href="@{Admin.initialiseLearners()}" title="initialise learners">learners</a></li>
+		<li class="first">Remove <a href="@{Admin.cleanStart()}" title="delete all models"><em style="color:red">all</em> models from the database</a></li>
+		<li class="first">Remove <a href="@{Admin.deleteAllRelations()}" title="delete relations and attributes"> relation and attribute models from the database</a></li>
+		<li>Remove <a href="@{Admin.deleteAllLearners()}" title="delete learners"> learner models from the database</a></li>
+		<li>Remove <a href="@{Admin.deleteAllPredictors()}" title="delete predictors">trained predictors from the database</a></li>
+		<li>Remove <a href="@{Admin.deleteFailedJobs()}" title="delete failed training jobs">failed training jobs from the database</a></li>
+	</ul>
+</p>
+
+<p><a href="@{Secure.logout()}">Log out</a></p>

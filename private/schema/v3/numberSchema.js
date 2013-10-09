@@ -1,0 +1,3 @@
+{ 
+    "/type": { "enum" : [ "integer", "number" ] }
+}

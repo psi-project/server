@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+#{set title:'Protocols and Structures for Inference - Generate new password hash' /}
+
+<h1>${title}</h1>
+
+<p>Note that this does <em>not</em> modify the settings in <code>conf/application.yml</code>; that must be done manually.</p>
+
+<form action="@{Admin.chpass}" method="POST">
+  <label for="phrase">Phrase to hash:</label> <input name="phrase" type="password"><br>
+  <label for="salt">Randomised string (salt):</label> <input name="salt" type="text"><br>
+  <input type="submit">
+</form>

@@ -1,0 +1,62 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+OPTIONS /{<.+$>path}                            Application.basicOptions
+
+# Relations
+GET     /data/?                                 Data.listAll
+GET     /data/{id}/?                            Data.describe
+POST    /data/{id}/?                            Attributes.create
+
+# Attributes
+GET     /data/{relID}/{<([^?]+)>id}             Attributes.describeOrApply
+DELETE  /data/{relID}/{<([^?]+)>id}             Attributes.delete
+POST    /data/{relID}/{<([^?]+)>id}             Attributes.join
+
+# Learners
+GET     /learn/?                                Learners.listAll
+GET     /learn/{id}                             Learners.describe
+PUT     /learn/{id}                             Learners.createTailored
+POST    /learn/{id}                             Learners.trainPredictor
+
+# Transformers & Predictors shared API
+GET     /{<(infer|transform)>kind}/?            Transformers.listAll
+GET     /{<(infer|transform)>kind}/{id}         Transformers.describeOrApply
+POST    /{<(infer|transform)>kind}/{id}         Transformers.join
+
+# Predictors only routes
+GET     /infer/{id}/update                      Predictors.updateSchema
+POST    /infer/{id}/update                      Predictors.update
+DELETE  /infer/{id}                             Predictors.delete
+
+# Schema
+GET     /schema/?                               Schemas.listAll
+GET     /schema/{s}                             Schemas.describe
+
+# Entry point
+GET     /                                       Application.index
+
+# Administration routes
+GET     /admin/login							Secure.login
+POST    /admin/login							Secure.authenticate
+GET     /admin/logout							Secure.logout
+GET     /admin/chpass							Admin.chpass
+POST    /admin/chpass							Admin.chpass
+GET     /admin/?                                Admin.index
+GET     /admin/clearAll							Admin.cleanStart
+GET     /admin/initData                         Admin.initialiseRelations
+GET     /admin/clearRelations                   Admin.deleteAllRelations
+GET     /admin/initLearners                     Admin.initialiseLearners
+GET     /admin/clearLearners                    Admin.deleteAllLearners
+GET     /admin/clearPredictors                  Admin.deleteAllPredictors
+GET     /admin/clearJobs                        Admin.deleteFailedJobs
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Catch all. MUST BE REMOVED IN A PUBLIC SYSTEM
+#*       /{controller}/{action}                  {controller}.{action}

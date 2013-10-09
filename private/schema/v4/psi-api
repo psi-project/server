@@ -1,0 +1,218 @@
+{
+	"id": "http://psi.cecs.anu.edu.au/psi-api#",
+	"$schema": "http://json-schema.org/hyper-schema",
+	"title": "PSI Message API",
+	"description": "Pure JSON Schema for message objects used in PSI",
+	"type": "object",
+	"oneOf": [
+		{ "$ref": "#/definitions/service" },
+		{ "$ref": "#/definitions/resource-list" },
+		{ "$ref": "#/definitions/relation" },
+		{ "$ref": "#/definitions/attribute" },
+		{ "$ref": "#/definitions/transformer" },
+		{ "$ref": "#/definitions/training-status" },
+		{ "$ref": "#/definitions/learner" },
+		{ "$ref": "#/definitions/value" },
+		{ "$ref": "#/definitions/attribute-definition" },
+		{ "$ref": "#/definitions/composition" },
+		{ "$ref": "#/definitions/task" }
+	],
+
+	"definitions": {
+		"uri": {
+			"type": "string",
+			"format": "uri"
+		},
+		
+		"message": {
+			"type": "object",
+			"required":	[ "psiType" ]
+		},
+		
+		"response": {
+			"allOf":	[ { "$ref": "#/definitions/message" } ],
+			"properties": {
+				"relatedServices":	{
+					"type": "array",
+					"items": { "$ref": "http://json-schema.org/draft-04/links" }
+				}
+			}			
+		},
+
+		"resource": {
+			"allOf":	[ { "$ref": "#/definitions/response" } ],
+			"properties": {
+				"uri":		{ "$ref": "#/definitions/uri" }
+			},			
+			"required":	[ "uri" ]
+		},
+		
+		"service": {
+			"title": "PSI Service",
+			"description": "Directory of PSI resource collections in a PSI service",
+			"allOf": [ { "$ref": "#/definitions/resource" } ],
+			"properties": {
+				"psiType":		{ "enum": [ "service" ] },
+				"relations":	{ "$ref": "#/definitions/uri" },
+				"schema":		{ "$ref": "#/definitions/uri" },
+				"learners":		{ "$ref": "#/definitions/uri" },
+				"predictors":	{ "$ref": "#/definitions/uri" },
+				"transformers":	{ "$ref": "#/definitions/uri" }
+			}
+		},
+
+		"resource-list": {
+			"title": "PSI Resource List",
+			"description": "List of PSI resource URIs",
+			"allOf": [ { "$ref": "#/definitions/resource" } ],
+			"properties": {
+				"psiType":		{ "enum": [ "resource-list" ] },
+				"resources":	{ "type": "array", "items": { "$ref": "#/definitions/uri" } }
+			},
+			"required": [ "resources" ]
+		},
+
+		"relation": {
+			"title": "PSI Relation",
+			"description": "Representation of a PSI relation, including its size, attributes and (PSI) schema of its supported queries",
+			"allOf": [ { "$ref": "#/definitions/resource" } ],
+			"properties": {
+				"psiType":			{ "enum": [ "relation" ] },
+				"description":		{ "type": "string" },
+				"size":				{ "type": "integer" },
+				"defaultAttribute":	{ "$ref": "#/definitions/uri" },
+				"attributes": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/uri" }
+				},
+				"querySchema": { "type": "object" }
+			},
+			"required": [ "size", "defaultAttribute", "attributes" ]				
+		},
+
+		"emitter": {
+			"description": "Common properties for transformers, predictors and attributes",
+			"allOf": [ { "$ref": "#/definitions/resource" } ],
+			"properties": {
+				"description":	{ "type": "string" },
+				"emits":		{ "type": "object" }
+			},
+			"required": [ "emits" ]
+		},
+		
+		"attribute": {
+			"title": "PSI Attribute",
+			"description": "Representation of a PSI attribute, including its schema and links to any sub-attributes, if it is structured",
+			"allOf": [ { "$ref": "#/definitions/emitter" } ],
+			"properties": {
+				"psiType":	{ "enum": [ "attribute" ] },
+				"relation":		{ "$ref": "#/definitions/uri" },
+				"subattributes": {
+					"type": [ "array", "object" ],
+					"items": { "$ref": "#/definitions/uri" },
+					"additionalProperties": { "$ref": "#/definitions/uri" } 
+				}
+			},
+			"required": [ "relation" ]
+		},
+		
+		"transformer": {
+			"title": "PSI Transformer (or Predictor)",
+			"description": "Representation of a PSI transformer or predictor",
+			"allOf": [ { "$ref": "#/definitions/emitter" } ],
+			"properties": {
+				"accepts":		{ "type": "object" },
+				"provenance":	{ "type": "object" },
+				"update":		{ "$ref": "#/definitions/uri" }
+			},			
+			"required": [ "accepts" ]
+		},
+
+		"training-status": {
+			"title": "Training status",
+			"description": "A training status representation of a predictor resource",
+			"allOf": [ { "$ref": "#/definitions/resource" } ],
+			"properties": {
+				"psiType":		{ "enum": [ "training-status"] },
+				"learner":		{ "$ref": "#/definitions/uri" },
+				"status":		{ "type": "string" }
+			},
+			"required": [ "learner", "status" ]
+		},
+
+		"learner": {
+			"title": "PSI Learner",
+			"description": "Representation of a PSI learner",
+			"allOf": [ { "$ref": "#/definitions/resource" } ],
+			"properties": {
+				"psiType":		{ "enum": [ "learner" ] },
+				"description":	{ "type": "string" },
+				"taskSchema":	{ "type": "object" }
+			},
+			"required": [ "taskSchema" ]
+		},
+		
+		"value": {
+			"title": "Value response",
+			"description": "The value of a transformer/predictor applied to a value or one or more values of an attribute. May have either a 'value' property or a 'valueList' property, but not both.",
+			"allOf": [ { "$ref": "#/definitions/response" } ],
+			"properties": {
+				"psiType":	{ "enum": [ "value"] }
+			},
+			"oneOf": [
+				{ "required": [ "value" ] },
+				{
+					"properties": { "valueList": { "type": "array", "minItems": 1 } },
+					"required": [ "valueList" ]
+				}
+			]
+		},
+		
+		"newAttribute": {
+			"title": "New attribute definition",
+			"description": "Definition of a new, structured attribute in terms of existing attributes",
+			"type":	[ "array", "object" ],
+			"items": { "$ref": "#/definitions/newAttribute" },
+			"minItems":	1,
+			"additionalProperties": { "$ref": "#/definitions/newAttribute" },
+			"minProperties": 1
+		},
+
+		"attribute-definition": {
+			"title": "Create attribute request",
+			"description": "An attribute creation request",
+			"allOf": [ { "$ref": "#/definitions/message" } ],
+			"properties": {
+				"psiType":		{ "enum": [ "attribute-definition" ] },
+				"attribute":	{ "$ref": "#/definitions/newAttribute" },
+				"description":	{ "type": "string" }
+			},
+			"required": [ "attribute" ]
+		},
+		
+		"composition": {
+			"title": "Join with transformer request",
+			"description": "A request to join a transformer or attribute with a transformer",
+			"allOf": [ { "$ref": "#/definitions/message" } ],
+			"properties": {
+				"psiType":		{ "enum": [ "composition" ] },
+				"join":			{ "$ref": "#/definitions/uri" },
+				"description":	{ "type": "string" }
+			},
+			"required": [ "join" ]
+		},
+		
+		"task": {
+			"title": "Task processing request",
+			"description": "Container for a processing task",
+			"allOf": [ { "$ref": "#/definitions/message" } ],
+			"properties": {
+				"psiType":	{ "enum": [ "task" ] },
+				"task":		{ "type": "object" }
+			},
+			"required" : [ "task" ]
+		}
+
+	}
+
+}

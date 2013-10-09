@@ -1,0 +1,9 @@
+# Application dependencies
+
+require:
+    - play
+    - play -> secure
+    - com.github.fge -> json-schema-validator 2.1.7
+    - nz.ac.waikato.cms.weka -> weka-dev 3.7.10 #No more FastVectors
+    - com.google.code.gson->gson 2.2.4: #This is more recent than Play's version
+        force: true

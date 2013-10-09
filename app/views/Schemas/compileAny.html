@@ -1,0 +1,22 @@
+#{extends 'main.html' /}
+#{set title:'Protocols and Structures for Inference - Compile a Schema' /}
+
+<!-- Should only be rendered if controller did not receive a name for a schema to compile -->
+
+<form method="POST" action="${request.path}">
+<p>
+<strong>Schema to compile:</strong><br/>
+<textarea name="schemaText" rows="10" cols="50">
+"$object"
+</textarea>
+</p>
+<p>
+<strong>Arguments as "key":value pairs in JSON format</strong><br/>
+<textarea name="schemaArgs" rows="10" cols="50">
+{
+
+}
+</textarea>
+</p>
+<input type="submit" value="Compile" />
+</form>

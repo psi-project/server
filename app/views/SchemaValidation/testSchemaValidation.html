@@ -1,0 +1,41 @@
+#{extends 'main.html' /}
+#{set title:'Protocols and Structures for Inference' /}
+
+<!-- Should only be rendered if controller didn't receive some JSON and a schema to use in validation.
+     Is not intended to pretty print validation results, only to provide a front end to push tests
+     through the validator. -->
+
+%{
+schemaForForm = schematext;
+if (schemaForForm == null)
+	schemaForForm = "{\n" + 
+					"  \"type\" : \"object\",\n" +
+					"  \"properties\" : {\n" +
+					"    \"a\" : { \"type\" : \"integer\" }\n" +
+					"  }\n" +
+					"}";
+jsonForForm = jsontext == null ? "{ a : 1 }" : jsontext;
+}%
+<form method="POST" action="/admin/validateSchema">
+<p>
+<strong>(JSON or PSI) Schema:</strong></br>
+<textarea name="schematext" rows="10" cols="50">
+${schemaForForm.trim()}
+</textarea>
+</p>
+<p>
+<strong>JSON instance:</strong></br>
+<textarea name="jsontext" rows="10" cols="50">
+${jsonForForm.trim()}
+</textarea>
+</p>
+<input type="submit" value="Validate" />
+</form>
+%{ if (validationErrors != null && ! validationErrors.isEmpty()) { }%
+<h3 style="color:red">Validation errors</h3>
+	#{list items:validationErrors, as:'error' }
+		<p>${error}</p>
+	#{/list}
+%{ } else { }%
+<h3 style="color:forestgreen">Value validates OK</h3>
+%{ } }%

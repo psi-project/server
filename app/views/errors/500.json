@@ -1,0 +1,5 @@
+{
+	"status": 500,
+	"error": "Internal Server Error",
+	#{if exception instanceof play.mvc.results.Error}"details": "${exception.getMessage()}"#{/if}#{else}"details": "${exception.getCause().getClass().getSimpleName()}${exception.getCause().getMessage() == null ? "" : ", " + exception.getCause().getMessage()}"#{/else}
+}

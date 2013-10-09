@@ -1,0 +1,6 @@
+#{extends 'listAll.html' /}
+#{set title:'Protocols and Structures for Inference - Pre-defined Schema' /}
+
+#{list items:resourceNames, as:'name' }
+	<li><a href="@{Schemas.describe(name)}?template=true" title="${name}">${name}</a></li>
+#{/list}

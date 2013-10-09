@@ -1,0 +1,13 @@
+*.ignore
+eclipse
+.classpath
+.project
+.settings
+tmp
+db
+/lib
+/test-result
+/modules
+/secure
+/conf/secure/*
+/public/secure
