@@ -59,7 +59,7 @@ public final class SKLearnTrainer extends Trainer {
 		try {
 			assertServiceIsUp();
 			//Note that this is sufficient for classification and clustering using scikit learn, and for the simple ranking algorithm implemented in the sklearn Python service, but nothing else at the moment
-			Attribute.Description instanceAttrDesc = task.getResource( task.hasResource(CommonResource.source) ? CommonResource.source : CommonResource.first);
+			Attribute.Description instanceAttrDesc = task.getResource( task.hasResource(CommonResource.source) ? CommonResource.source : CommonResource.preferred);
 			Relation.Description relationDesc = HttpUtil.getPSIResponse( instanceAttrDesc.relation );
 			String relationURIFragment = relationDesc.uri.replaceAll("\\?.*$","").replaceAll("\\/$","").replaceAll(".*\\/", "");
 			
@@ -89,7 +89,7 @@ public final class SKLearnTrainer extends Trainer {
 			assertServiceIsUp();
 			assert predictor instanceof SKLearnPredictor;
 			//Note that this is sufficient for classification and clustering using scikit learn, and for the simple ranking algorithm implemented in the sklearn Python service, but nothing else at the moment
-			Attribute.Description instanceAttrDesc = task.getResource( task.hasResource(CommonResource.source) ? CommonResource.source : CommonResource.first);
+			Attribute.Description instanceAttrDesc = task.getResource( task.hasResource(CommonResource.source) ? CommonResource.source : CommonResource.preferred);
 			JsonElement labelSchema = task.hasResource(CommonResource.target) ? getAttribute(task, CommonResource.target).emits : null;
 
 			Map<CommonResource,JsonArray> allValues = retrieveValues(task, true);
@@ -101,8 +101,9 @@ public final class SKLearnTrainer extends Trainer {
 					newTask.add( learner.getParameter( prop.getKey() ).toolkitName, prop.getValue() );
 			}
 			JsonObject newResources = new JsonObject();
-			for (Map.Entry<CommonResource,JsonArray> values : allValues.entrySet())
+			for (Map.Entry<CommonResource,JsonArray> values : allValues.entrySet()) {
 				newResources.add(values.getKey().name(), values.getValue());
+			}
 			if (labelSchema != null)
 				newResources.add( "targetLabels", Schema.compileToJSONSchema( labelSchema ).getAsJsonObject().get("enum") );
 			newTask.add("resources", newResources);
@@ -114,7 +115,7 @@ public final class SKLearnTrainer extends Trainer {
 
 			((SKLearnPredictor)predictor).trainingComplete(status.get("predictor").getAsString(),
 					instanceAttrDesc.emits.toString(),
-					generatePredictorOutputSchema(labelSchema, status, task.hasResource(CommonResource.first)),
+					generatePredictorOutputSchema(labelSchema, status, task.hasResource(CommonResource.preferred)),
 					Predictor.newProvenance(task, new Date()),
 					generateUpdateSchema(learner, instanceAttrDesc.emits, labelSchema, false)
 			);
