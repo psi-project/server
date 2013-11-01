@@ -105,7 +105,7 @@ public class EncodedTransformerChain {
 	}
 	
 	public Function constructProcessingPipeline(AbstractFunction start) throws TransformationEncodingException {
-		checkCompatible( start.getEmitsInJSON(), list.get(0).fetchTransformer(false).getAcceptsInJSON() );
+		checkCompatible( start.getEmitsInJSON(), list.get(0).fetchTransformer(true).getAcceptsInJSON() );
 		return new JoinedTransformer(start, constructProcessingPipeline(0));
 	}
 	
