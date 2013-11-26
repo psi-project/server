@@ -2,7 +2,7 @@
 {
 	"name":			"iris_prefs_full",
 	"description":	"All pairs of iris flowers from the iris dataset, where one is preferred to the other. Setosa is preferred to the other species, versicolor is preferred to virginica.",
-	"format":		"CSV";
+	"format":		"CSV",
 	"path":			"/private/datasets/iris_prefs_full.csv",
 	"defaultAttribute": "pair",
 	"attributes":	[

@@ -2,7 +2,7 @@
 {
 	"name":			"us_income",
 	"description":	"Low versus high income brackets as reported in 1994 US census (known as the 'Adult' data set in the UCI ML Repository)",
-	"format":		"CSV";
+	"format":		"CSV",
 	"path":			"/private/datasets/us_income.csv",
 	"defaultAttribute": "censusData",
 	"attributes":	[

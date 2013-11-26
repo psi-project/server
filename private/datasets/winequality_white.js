@@ -2,7 +2,7 @@
 {
 	"name":			"white_wine",
 	"description":	"Physicochemical data describing white wine (from the Vinho Verde region) and expert ratings of its quality",
-	"format":		"CSV";
+	"format":		"CSV",
 	"path":			"/private/datasets/winequality_white.csv",
 	"defaultAttribute": "wineDetails",
 	"attributes":	[

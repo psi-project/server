@@ -2,7 +2,7 @@
 {
 	"name":			"iris", //Will become part of its URI
 	"description":	"The Iris dataset, courtesy of R.A. Fisher",
-	"format":		"CSV"; //Used internally to create appropriate readers
+	"format":		"CSV", //Used internally to create appropriate readers
 	"path":			"/private/datasets/iris.csv",
 	//Definitions of new attributes. Attributes are created in order,
 	// so later ones may use earlier ones as sub-attributes.
