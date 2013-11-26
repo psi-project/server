@@ -42,18 +42,22 @@ public abstract class PrimitiveAttribute extends Attribute {
 	/** The JSON type to which to convert CSV entries. */
 	protected JSONType type;
 
-	public PrimitiveAttribute() { this(null, null, null); }
+	public PrimitiveAttribute() { this(null, null, null, null); }
 	
-	public PrimitiveAttribute(final String compositeName, String attrName, JSONType type, String... values) {
+	public PrimitiveAttribute(final String compositeName, String attrName, JSONType type,
+			String richType, String... values)
+	{
 		super(compositeName, attrName);
 		this.type = type == null ? JSONType.STRING : type;
-		this.emits = "$" + this.type.toString().toLowerCase();
+		this.emits = richType == null ? "$" + this.type.toString().toLowerCase() : richType;
 
 		if (values.length > 0) {
 			JsonObject tempSchema = new JsonObject();
 			tempSchema.add(this.emits, type.addEnumSchemaProperty(null, values) );
-			this.emits = Util.GSON.toJson(tempSchema);		
+			this.emits = Util.GSON.toJson(tempSchema);
 			Logger.trace("In PrimitiveAttribute.<init>: Generated emits for enumerated field is: %s", this.emits);
+		} else {
+			this.emits = "\"" + this.emits + "\""; 
 		}
 	}
 	
@@ -73,9 +77,15 @@ public abstract class PrimitiveAttribute extends Attribute {
 		Logger.trace("PrimitiveAttribute.create(): attrURI.getQuery() == %s", attrURI.getQuery());
 		
 		Map<String,String> args = Util.extractQueryArgs(attrURI);
-		JSONType type = args.containsKey("type") ? JSONType.valueOf(args.get("type").toUpperCase()) : null;  
-		if (type == null)
+		if (! args.containsKey("type"))
 			throw new IllegalArgumentException("Internal attributes require that a type be specified.");
+		String typeString = args.get("type");
+		JSONType type = null;
+		String richType = null;
+		if (typeString.charAt(0) == '@')
+			richType = typeString;
+		else
+			type = JSONType.valueOf(typeString.toUpperCase());  
 
 		String[] values = args.containsKey("values") ? args.get("values").split(",") : new String[0];
 		
@@ -83,9 +93,9 @@ public abstract class PrimitiveAttribute extends Attribute {
 		if (primitiveName.equals(CSV_COLUMN)) {
 			//Names for array elements start at 1, but internally will be zero-indexed
 			int index = Integer.parseInt(path) - 1;  
-			attr = new CSVColumnAttribute(compositeName, attrName, index, type, values);
+			attr = new CSVColumnAttribute(compositeName, attrName, index, type, richType, values);
 		} else if (primitiveName.equals(OBJECT_PROPERTY)) {
-			attr = new ObjectPropertyAttribute(compositeName, attrName, path.split("/"), type, values);
+			attr = new ObjectPropertyAttribute(compositeName, attrName, path.split("/"), type, richType, values);
 		}
 		//Now support descriptions for primitive attributes (for instance, when defined as part of a single, large, structured attribute)
 		if (attr != null && args.containsKey("description"))

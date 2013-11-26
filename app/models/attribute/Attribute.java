@@ -411,7 +411,7 @@ public abstract class Attribute extends AbstractFunction {
 				this.description = attribute.description;
 			else
 				this.description = transformation.getDescription() == null ? attribute.description + " (transformed)" : transformation.getDescription();
-			this.emits = transformation == null ? Util.parseJSON( attribute.emits ) : transformation.getEmits();
+			this.emits = transformation == null ? attribute.getEmitsInJSON() : transformation.getEmits();
 			if (attribute.relation != null)
 				this.relation = Data.getReverseRoute(attribute.relation, query);
 			if ( transformation == null && (attribute instanceof ArrayAttribute || attribute instanceof ObjectAttribute) ) {

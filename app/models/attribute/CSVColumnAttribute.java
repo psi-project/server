@@ -22,10 +22,11 @@ public class CSVColumnAttribute extends PrimitiveAttribute {
 	@Column(name="`index`")
 	protected int index;
 	
-	public CSVColumnAttribute() { this("", "", 0, null); }
+	public CSVColumnAttribute() { this("", "", 0, null, null); }
 	
-	public CSVColumnAttribute(final String compositeName, String attrName, int index, JSONType type, String... values) {
-		super(compositeName, attrName, type, values);
+	public CSVColumnAttribute(final String compositeName, String attrName,
+			int index, JSONType type, String richType, String... values) {
+		super(compositeName, attrName, type, richType, values);
 		this.index = index;
 	}
 	

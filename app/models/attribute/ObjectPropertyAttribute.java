@@ -23,10 +23,11 @@ public class ObjectPropertyAttribute extends PrimitiveAttribute {
 	/** Path to property to read. */
 	protected String[] propertyPath;
 	
-	public ObjectPropertyAttribute() { this("", "", new String[0], null); }
+	public ObjectPropertyAttribute() { this("", "", new String[0], null, null); }
 	
-	public ObjectPropertyAttribute(final String compositeName, String attrName, String[] propertyPath, JSONType type, String... values) {
-		super(compositeName, attrName, type, values);
+	public ObjectPropertyAttribute(final String compositeName, String attrName,
+			String[] propertyPath, JSONType type, String richType, String... values) {
+		super(compositeName, attrName, type, richType, values);
 		this.propertyPath = Arrays.copyOf(propertyPath, propertyPath.length);
 	}
 	
