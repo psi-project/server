@@ -21,8 +21,6 @@ import models.data.*;
 import util.Util;
 
 public class Data extends CORSController {
-	private static Pattern RELATION_ID_PATTERN = Pattern.compile("/(?:(?:data)|(?:view))/([^/?]+)");
-	
 	public static void listAll() { listAll(Relation.class); }
 
 	public static void describe(String id) {
@@ -42,13 +40,6 @@ public class Data extends CORSController {
 		if (relation == null)
 			notFoundSeeList("relation", "Data.listAll");
 		return relation;
-	}
-	
-	public static Relation findByURI(String relationURI) {
-		Matcher idMatcher = RELATION_ID_PATTERN.matcher(relationURI);
-		if (idMatcher.find())
-			return find( idMatcher.group(1) );
-		return null;
 	}
 	
 	//--Admin tasks; no route leads directly to these--------------------------
